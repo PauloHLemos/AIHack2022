@@ -1,2 +1,5 @@
 # ignore editor tags
 .idea/
+
+# ignore trajectories data
+trajectories/
