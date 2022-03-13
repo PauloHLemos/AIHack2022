@@ -8,13 +8,6 @@ from Frame import Frame
 from Model import Model
 
 
-def load_frames(path):
-    frames = []
-    for fname in glob(path + "/*"):
-        frames.append(np.load(fname, allow_pickle=True))
-    return frames
-
-
 # animates motion of given directory of frames
 def plot(frames):
     fig = plt.figure()
@@ -30,6 +23,13 @@ def plot(frames):
         # plt.imshow(frame, interpolation='nearest')
         plt.pause(.05)
         fig.canvas.draw()
+
+
+def load_frames(path):
+    frames = []
+    for fname in glob(path + "/*"):
+        frames.append(np.load(fname, allow_pickle=True))
+    return frames
 
 
 def load_data(dir):
@@ -67,36 +67,53 @@ def load_data(dir):
 
     # get relative movement from relative coordinates
     relMovement = []
-    relEuclideanMovement = []
+    relEuclideanMovement = [0] * len(relCoords)
     for i in range(1, len(relCoords)):
         prev = relCoords[i - 1]
         cur = relCoords[i]
         relMovement.append((cur[0] - prev[0], cur[1] - prev[1]))
-        relEuclideanMovement.append(math.sqrt((cur[0] - prev[0]) ** 2 + (cur[1] - prev[1]) ** 2))
+        relEuclideanMovement[i] = (math.sqrt((cur[0] - prev[0]) ** 2 + (cur[1] - prev[1]) ** 2))
 
     # print(a1)
     # print(a2)
     # print(relMovement)
     # print(relEuclideanMovement)
 
-    return [a1, a2, relEuclideanMovement]
+    return [a1, a2] + relEuclideanMovement[:100]
 
 
-if __name__ == '__main__':
-    X = np.empty((48, 3), dtype=object)
-    y = np.zeros(48)
-    for i in range(24):
+def load():
+    X = np.zeros((49, 102))
+    y = np.zeros(49)
+    for i in range(1, 24):
         print(i)
-        print(load_data("trajectories/t4"))
-        X[i] = load_data("trajectories/t4")
-        y[i] = 1
+        x_temp = load_data("trajectories/t" + str(i))
+        if len(x_temp) == 102:
+            print(x_temp)
+            X[i] = x_temp
+            y[i] = 1
     for i in range(24, 49):
         print(i)
-        np.append(X, load_data("trajectories/t4"))
-        np.append(y, 1)
+        x_temp = load_data("trajectories/t" + str(i))
+        if len(x_temp) == 102:
+            print(x_temp)
+            X[i] = x_temp
 
     np.save("trainData_X", X, allow_pickle=True)
     np.save("trainData_y", y, allow_pickle=True)
 
-    # model = Model(X, y)
-    # model.sequential()
+
+if __name__ == '__main__':
+    # frames = load_frames("trajectories/t1")
+    # plot(frames)
+    # load()
+    X = np.load("trainData_X.npy", allow_pickle=True)
+    y = np.load("trainData_y.npy", allow_pickle=True)
+
+    # remove zero rows
+    zeroRows = np.all(X == 0, axis=1)
+    X = X[~zeroRows]
+    y = y[~zeroRows]
+
+    model = Model(X, y)
+    model.sequential()
