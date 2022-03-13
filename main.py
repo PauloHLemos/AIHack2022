@@ -110,10 +110,23 @@ if __name__ == '__main__':
     X = np.load("trainData_X.npy", allow_pickle=True)
     y = np.load("trainData_y.npy", allow_pickle=True)
 
-    # remove zero rows
-    zeroRows = np.all(X == 0, axis=1)
-    X = X[~zeroRows]
-    y = y[~zeroRows]
+    X_train = np.concatenate([X[:15], X[23:39]])
+    X_test  = np.concatenate([X[15:23], X[39:48]])
 
-    model = Model(X, y)
+    y_train = np.append(y[:15], y[23:39])
+    y_test  = np.append(y[15:23], y[39:48])
+
+    # remove zero rows
+    zeroRows = np.all(X_train == 0, axis=1)
+    X_train = X_train[~zeroRows]
+    y_train = y_train[~zeroRows]
+
+    zeroRows = np.all(X_test == 0, axis=1)
+    X_test = X_test[~zeroRows]
+    y_test = y_test[~zeroRows]
+    #
+    # print(X_test)
+    # print(y_test)
+
+    model = Model(X, y, X_test, y_test)
     model.sequential()
