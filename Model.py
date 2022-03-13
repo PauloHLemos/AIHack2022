@@ -15,12 +15,10 @@ class Model():
     def sequential(self):
         # define the keras model
         model = Sequential()
-        model.add(Dense(12, input_dim=102, activation='relu'))
-        model.add(Dense(102, activation='relu'))
-        model.add(Dense(102, activation='relu'))
-        model.add(Dense(102, activation='relu'))
-        model.add(Dense(10, activation='relu'))
-        model.add(Dense(10, activation='relu'))
+        model.add(Dense(104, input_dim=104, activation='relu'))
+        model.add(Dense(104, activation='relu'))
+        model.add(Dense(100, activation='relu'))
+        model.add(Dense(20, activation='relu'))
         model.add(Dense(1, activation='sigmoid'))
         # compile the keras model
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
