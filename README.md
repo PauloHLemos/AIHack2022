@@ -1,6 +1,8 @@
 # AIHack2022
 A model to predict microfluidic drop interactions.
 
+Top 3 project on the drop coalescence challenge.
+
 ### Problem
 Given the first 100 frames, predict whether two silver droplets will coalesce or not.
 
@@ -20,4 +22,4 @@ These were size, momentum and shape of the droplet. Mass is also a factor to con
 
 Using the open-cv library also gave us the advantage that the area and center of the shape could be easily obtained. We used the center to calculate the general movement of the drop relative to the previous frame and used this to calculate the velovity of the droplet.
 
-We then fed these parameters into a 6-layered neural network and achieved a prediction 70% accuracy.
+We then fed these parameters into a 6-layered neural network and achieved a 70% accuracy.
